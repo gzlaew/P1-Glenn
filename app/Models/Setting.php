@@ -14,6 +14,11 @@ class Setting extends Model
      *
      * @var array
      */
+    public $incrementing = false;
+    public $timestamps = true; // atau false jika tidak pakai created_at, updated_at
+    protected $primaryKey = 'key';
+    protected $keyType = 'string';
+
     protected $fillable = ['key', 'value'];
 
     /**
@@ -21,5 +26,4 @@ class Setting extends Model
      *
      * @var bool
      */
-    public $timestamps = false;
 }
