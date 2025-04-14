@@ -80,7 +80,11 @@ class AuthController extends StislaController
             DB::beginTransaction();
             $data = $request->only(
                 [
-                    'name', 'email', 'phone_number', 'birth_date', 'address',
+                    'name',
+                    'email',
+                    'phone_number',
+                    'birth_date',
+                    'address',
                 ]
             );
             $data = array_merge([
@@ -140,12 +144,6 @@ class AuthController extends StislaController
     {
         $user = $this->userRepository->findByEmail($request->email);
         if (Hash::check($request->password, $user->password)) {
-            $loginMustVerified = $this->settingRepository->loginMustVerified();
-            if ($loginMustVerified) {
-                if ($user->email_verified_at === null) {
-                    return Helper::backError(['email' => __('Email belum diverifikasi')]);
-                }
-            }
             $this->userRepository->login($user);
             return Helper::redirectSuccess(route('dashboard.index'), __('Berhasil masuk ke dalam sistem'));
         } else {
@@ -316,25 +314,6 @@ class AuthController extends StislaController
      * @param ForgotPasswordRequest $request
      * @return Response
      */
-    public function sendEmailVerification(ForgotPasswordRequest $request)
-    {
-        if ($this->settingRepository->loginMustVerified() === false) abort(404);
-        DB::beginTransaction();
-        try {
-            $user = $this->userRepository->findByEmail($request->email);
-            $userNew = $this->userRepository->update(['email_token' => Str::random(150)], $user->id);
-            $this->emailService->verifyAccount($userNew);
-            logExecute(__('Email Verifikasi'), UPDATE, null, null);
-            DB::commit();
-            return back()->withInput()->with('successMessage', __('Berhasil mengirim link verifikasi ke ' . $request->email));
-        } catch (Exception $e) {
-            DB::rollBack();
-            // if (Str::contains($e->getMessage(), 'Connection could not be established')) {
-            return back()->withInput()->with('errorMessage', __('Gagal mengirim email, server email sedang gangguan'));
-            // }
-            // return $e->getMessage();
-        }
-    }
 
     /**
      * process verify account
@@ -342,20 +321,6 @@ class AuthController extends StislaController
      * @param mixed $token
      * @return Response
      */
-    public function verify($token)
-    {
-        if ($this->settingRepository->loginMustVerified() === false) abort(404);
-        $user = $this->userRepository->findByEmailToken($token);
-        if ($user === null) abort(404);
-        $userNew = $this->userRepository->update([
-            'email_verified_at' => now(),
-            'email_token'       => null,
-            'verification_code' => null
-        ], $user->id);
-        logExecute(__('Verifikasi Akun'), UPDATE, $user, $userNew);
-        return redirect()->route('login')->with('successMessage', __('Berhasil memverifikasi akun, silakan masuk menggunakan akun anda'));
-    }
-
     /**
      * save temp session provider
      *
