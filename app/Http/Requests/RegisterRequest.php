@@ -32,6 +32,7 @@ class RegisterRequest extends FormRequest
                 'password'              => 'required|min:4|confirmed',
                 'password_confirmation' => 'required|min:4',
                 'phone_number'          => 'nullable|numeric',
+                'role' => 'required|in:Admin,Petugas,Marketing',
             ];
         }
 

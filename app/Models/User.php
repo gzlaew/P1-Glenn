@@ -38,6 +38,7 @@ class User extends Authenticatable implements JWTSubject
         'file_upload',
         'wrong_login',
         'is_active',
+        'role',
     ];
 
     /**

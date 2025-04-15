@@ -21,6 +21,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\YoutubeController;
 use App\Http\Middleware\FileManagerPermission;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PegawaiController;
 
 # DASHBOARD
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -180,3 +181,11 @@ Route::get('testing/modal', [TestingController::class, 'modal']);
 Route::get('dropboxs', [DropboxController::class, 'index'])->name('dropboxs.index');
 Route::post('dropboxs', [DropboxController::class, 'upload'])->name('dropboxs.upload');
 Route::delete('dropboxs', [DropboxController::class, 'destroy'])->name('dropboxs.destroy');
+
+Route::prefix('pegawai')->middleware(['auth'])->group(function () {
+    Route::get('/', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::post('/store', [PegawaiController::class, 'store'])->name('pegawai.store');    // POST
+    Route::put('/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update'); // PUT
+    Route::get('/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::delete('/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+});

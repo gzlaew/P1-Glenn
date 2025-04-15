@@ -13,6 +13,13 @@ return [
                     'is_active_if_url_includes' => 'dashboard*'
                 ],
                 [
+                    'menu_name' => 'Pegawai',
+                    'route_name' => 'pegawai.index',
+                    'icon' => 'fas fa-user-tie',
+                    'permission' => null,
+                    'is_active_if_url_includes' => 'pegawai*'
+                ],
+                [
                     'menu_name' => 'Contoh CRUD',
                     'route_name' => 'crud-examples.index',
                     'icon' => 'fas fa-atom',

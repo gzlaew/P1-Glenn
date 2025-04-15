@@ -85,6 +85,7 @@ class AuthController extends StislaController
                     'phone_number',
                     'birth_date',
                     'address',
+                    'role',
                 ]
             );
             $data = array_merge([

@@ -49,6 +49,7 @@
       </div>
 
     </div>
+     @yield('table')
   </div>
 @endsection
 
