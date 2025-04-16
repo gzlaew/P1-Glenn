@@ -47,6 +47,7 @@
               </div>
             </div>
             <div class="card-body">
+                @yield('rowForm')
               @include('stisla.includes.forms.buttons.btn-datatable')
               <div class="table-responsive" id="datatable-view">
                 <input type="hidden" id="isYajra" value="{{ $isYajra }}">

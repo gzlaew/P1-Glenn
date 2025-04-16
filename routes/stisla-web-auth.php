@@ -22,6 +22,8 @@ use App\Http\Controllers\YoutubeController;
 use App\Http\Middleware\FileManagerPermission;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MemberAuthController;
 
 # DASHBOARD
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -188,4 +190,32 @@ Route::prefix('pegawai')->middleware(['auth'])->group(function () {
     Route::put('/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update'); // PUT
     Route::get('/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
     Route::delete('/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+    Route::post('/import', [PegawaiController::class, 'import'])->name('pegawai.import');
+
+    // ✅ Tambahkan route ekspor:
+    Route::get('/pdf', [PegawaiController::class, 'exportPdf'])->name('pegawai.pdf');
+    Route::get('/print', [PegawaiController::class, 'exportPrint'])->name('pegawai.print');
+    Route::get('/excel', [PegawaiController::class, 'exportExcel'])->name('pegawai.excel');
+    Route::get('/csv', [PegawaiController::class, 'exportCsv'])->name('pegawai.csv');
+    Route::get('/json', [PegawaiController::class, 'exportJson'])->name('pegawai.json');
 });
+
+Route::prefix('member')->middleware(['auth'])->group(function () {
+    Route::get('/', [MemberController::class, 'index'])->name('member.index');
+    Route::post('/store', [MemberController::class, 'store'])->name('member.store');
+    Route::put('/update/{id}', [MemberController::class, 'update'])->name('member.update');
+    Route::get('/edit/{id}', [MemberController::class, 'edit'])->name('member.edit');
+    Route::delete('/delete/{id}', [MemberController::class, 'destroy'])->name('member.destroy');
+
+    // Export
+    Route::get('/pdf', [MemberController::class, 'exportPdf'])->name('member.pdf');
+    Route::get('/excel', [MemberController::class, 'exportExcel'])->name('member.excel');
+    Route::get('/csv', [MemberController::class, 'exportCsv'])->name('member.csv');
+    Route::get('/json', [MemberController::class, 'exportJson'])->name('member.json');
+    Route::post('/import', [MemberController::class, 'import'])->name('member.import');
+});
+
+Route::get('/register-member', [MemberAuthController::class, 'showRegisterForm'])->name('member.register');
+Route::post('/register-member', [MemberAuthController::class, 'register'])->name('member.register.store');
+Route::get('/setting', [\App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
+Route::post('/setting', [\App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');

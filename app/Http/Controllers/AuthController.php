@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 
 class AuthController extends StislaController
 {
@@ -76,41 +77,29 @@ class AuthController extends StislaController
      */
     public function register(RegisterRequest $request)
     {
-        try {
-            DB::beginTransaction();
-            $data = $request->only(
-                [
-                    'name',
-                    'email',
-                    'phone_number',
-                    'birth_date',
-                    'address',
-                    'role',
-                ]
-            );
-            $data = array_merge([
-                'password' => bcrypt($request->password)
-            ], $data);
-            $user = $this->userRepository->create($data);
-            $this->userRepository->assignRole($user, 'user');
-            if ($this->settingRepository->loginMustVerified()) {
-                $user->update(['email_token' => Str::random(150)]);
-                $this->emailService->verifyAccount($user);
-                logRegister($user);
-                DB::commit();
-                return redirect()->route('login')->with('successMessage', __('Cek inbox email anda untuk memverifikasi akun terlebih dahulu'));
-            }
-            logRegister($user);
-            $this->userRepository->login($user);
-            DB::commit();
-            return redirect()->route('dashboard.index')->with('successMessage', __('Berhasil mendaftar dan masuk ke dalam sistem'));
-        } catch (Exception $e) {
-            DB::rollBack();
-            if (Str::contains($e->getMessage(), 'SMTP')) {
-                return back()->withInput()->with('errorMessage', __('Gagal mengirim email verifikasi, silahkan coba lagi nanti'));
-            }
-            return back()->with('errorMessage', __($e->getMessage()));
-        }
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone_number' => 'nullable|string|max:20',
+            'birth_date' => 'nullable|date',
+            'address' => 'nullable|string|max:255',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone_number' => $validated['phone_number'] ?? null,
+            'birth_date' => $validated['birth_date'] ?? null,
+            'address' => $validated['address'] ?? null,
+            'password' => Hash::make($validated['password']),
+            'role' => 'Member', // ⬅️ Set default role
+            'saldo' => 0,
+            'tanggal_daftar' => now(),
+            'status' => 'aktif',
+        ]);
+
+        return redirect()->route('login')->with('success', 'Pendaftaran berhasil, silakan login.');
     }
 
     /**

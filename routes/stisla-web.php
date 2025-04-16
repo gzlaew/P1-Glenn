@@ -37,6 +37,7 @@ Route::post('crud-generator', [CrudController::class, 'generateJson'])->middlewa
 
 # YOUTUBE
 Route::get('youtube/view-sync', [YoutubeController::class, 'viewSync'])->name('youtube.view-sync')->middleware('auth');
+Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 
 # TEST
 Route::get('test', [TestingController::class, 'test'])->name('test');

@@ -37,8 +37,9 @@
             <li class="nav-item">
               <a href="{{ route('dashboard.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>{{ __('Beranda') }}</span></a>
             </li>
+
             <li class="nav-item active">
-              <a href="#" class="nav-link"><i class="far fa-heart"></i><span>CRUD Generator</span></a>
+              <a href="#" class="nav-link"><i class="far fa-heart"></i><span>CRUD LENN</span></a>
             </li>
             {{-- <li class="nav-item dropdown">
               <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i class="far fa-clone"></i><span>Multiple Dropdown</span></a>

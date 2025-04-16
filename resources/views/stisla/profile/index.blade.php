@@ -1,6 +1,6 @@
 @php
-  $_superadmin_account = \App\Models\User::find(1);
-  $_is_superadmin = auth()->id() == $_superadmin_account->id;
+  $user = auth()->user();
+  $_is_superadmin = $user && $user->id === 1;
 @endphp
 
 @extends('stisla.layouts.app')
@@ -16,7 +16,7 @@
     <h2 class="section-title">{{ $title }}</h2>
     <p class="section-lead">{{ __('Perbarui kapan saja profil anda di halaman ini') }}.</p>
     <div class="row">
-      <div class="col-12">
+      <div class="col-md-8">
         <form action="" method="post" enctype="multipart/form-data" class="needs-validation">
           <div class="card">
             <div class="card-header">
@@ -69,20 +69,20 @@
               </div>
             </div>
           </div>
-
         </form>
       </div>
 
-      <div class="col-12">
-        @if (config('app.is_demo') && $_is_superadmin)
-          <div class="alert alert-info alert-has-icon">
-            <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
-            <div class="alert-body">
-              <div class="alert-title">{{ __('Informasi') }}</div>
-              Dalam versi demo email dan password tidak bisa diubah
-            </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h4><i class="fas fa-wallet"></i> Informasi Akun</h4>
+            <a href="#" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Isi Saldo</a>
           </div>
-        @endif
+          <div class="card-body">
+            <p><strong>Saldo:</strong> Rp {{ number_format($user->saldo ?? 0) }}</p>
+            <p><strong>Tanggal Bergabung:</strong> {{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</p>
+          </div>
+        </div>
       </div>
 
       <div class="col-12">
@@ -95,15 +95,9 @@
               @method('PUT')
               @csrf
               <div class="row">
-                @if ($user->twitter_id)
-                  <div class="col-md-6">
-                    @include('stisla.includes.forms.inputs.input', ['value' => $user->twitter_id, 'label' => 'Twitter ID', 'disabled' => true])
-                  </div>
-                @endif
                 <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input-email', ['value' => $user->email])
                 </div>
-
                 @if (!($_is_superadmin && config('app.is_demo')))
                   <div class="col-md-12">
                     @include('stisla.includes.forms.buttons.btn-save')
@@ -113,22 +107,10 @@
               </div>
             </div>
           </div>
-
         </form>
       </div>
 
       <div class="col-12">
-        <div class="alert alert-{{ $totalDay > 30 ? 'danger' : 'info' }} alert-has-icon">
-          <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
-          <div class="alert-body">
-            <div class="alert-title">{{ __('Informasi') }}</div>
-            {{ __('Password terakhir kali diperbarui pada ') . $user->last_password_change }}
-            @if ($totalDay > 30)
-              <br>
-              {{ __('Kami merekomendasikan password diganti per 30 hari') }}
-            @endif
-          </div>
-        </div>
         <form action="{{ route('profile.update-password') }}" method="post" class="needs-validation" id="formPassword">
           <div class="card">
             <div class="card-header">
@@ -147,18 +129,15 @@
                 <div class="col-md-6">
                   @include('stisla.includes.forms.inputs.input-password', ['value' => '', 'id' => 'new_password_confirmation', 'label' => __('Konfirmasi Password Baru')])
                 </div>
-
                 @if (!($_is_superadmin && config('app.is_demo')))
                   <div class="col-md-12">
                     @include('stisla.includes.forms.buttons.btn-save')
                     @include('stisla.includes.forms.buttons.btn-reset')
                   </div>
                 @endif
-
               </div>
             </div>
           </div>
-
         </form>
       </div>
     </div>
