@@ -188,21 +188,20 @@ Route::get('dropboxs', [DropboxController::class, 'index'])->name('dropboxs.inde
 Route::post('dropboxs', [DropboxController::class, 'upload'])->name('dropboxs.upload');
 Route::delete('dropboxs', [DropboxController::class, 'destroy'])->name('dropboxs.destroy');
 
-Route::prefix('pegawai')->middleware(['auth'])->group(function () {
-    Route::get('/', [PegawaiController::class, 'index'])->name('pegawai.index');
-    Route::post('/store', [PegawaiController::class, 'store'])->name('pegawai.store');    // POST
-    Route::put('/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update'); // PUT
-    Route::get('/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
-    Route::delete('/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
-    Route::post('/import', [PegawaiController::class, 'import'])->name('pegawai.import');
-
-    // ✅ Tambahkan route ekspor:
+Route::middleware(['auth'])->group(function () {
+    Route::resource('pegawai', PegawaiController::class);
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
     Route::get('/pdf', [PegawaiController::class, 'exportPdf'])->name('pegawai.pdf');
     Route::get('/print', [PegawaiController::class, 'exportPrint'])->name('pegawai.print');
     Route::get('/excel', [PegawaiController::class, 'exportExcel'])->name('pegawai.excel');
     Route::get('/csv', [PegawaiController::class, 'exportCsv'])->name('pegawai.csv');
     Route::get('/json', [PegawaiController::class, 'exportJson'])->name('pegawai.json');
 });
+
 
 Route::prefix('member')->middleware(['auth'])->group(function () {
     Route::get('/', [MemberController::class, 'index'])->name('member.index');
