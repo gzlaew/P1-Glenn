@@ -22,3 +22,5 @@ Route::prefix('pegawai')->middleware(['auth'])->group(function () {
     Route::get('/csv', [PegawaiController::class, 'exportCsv'])->name('pegawai.csv');
     Route::get('/json', [PegawaiController::class, 'exportJson'])->name('pegawai.json');
 });
+Route::get('/setting', [\App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
+Route::post('/setting', [\App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');

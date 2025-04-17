@@ -15,68 +15,55 @@
     </div>
 
     <ul class="sidebar-menu">
-      @foreach ($_sidebar_menus as $_group)
-        <li class="menu-header">{{ __($_group->group_name) }}</li>
+      <li class="menu-header">Menu</li>
 
-        @php
-          $_user = auth()->user();
-        @endphp
-        @foreach ($_group->menus as $_menu)
-          {{-- if single menu --}}
-          @if ($_menu->childs->count() === 0)
-            @php
-              $_menu_condition = $_menu->permission === null || $_user->can($_menu->permission);
-            @endphp
-            @if ($_menu_condition)
-              <li @if (Request::is($_menu->is_active_if_url_includes)) class="active" @endif>
-                <a class="nav-link" href="{{ $_menu->fix_url }}" @if ($_menu->is_blank) target="_blank" @endif>
-                  <i class="{{ $_menu->icon }}"></i>
-                  <span>{{ __($_menu->menu_name) }}</span>
-                </a>
-              </li>
-            @endif
+      <li class="nav-item @if (Request::is('pegawai*')) active @endif">
+        <a class="nav-link" href="{{ route('pegawai.index') }}">
+          <i class="fas fa-users"></i>
+          <span>Pegawai</span>
+        </a>
+      </li>
 
-            {{-- else with child dropdown menu --}}
-          @else
-            @php
-              $_is_active = $_menu->childs
-                  ->pluck('is_active_if_url_includes')
-                  ->filter(function ($item) {
-                      return Request::is($item);
-                  })
-                  ->count();
-              $_menu_condition = $_menu->childs
-                  ->pluck('permission')
-                  ->filter(function ($item) use ($_user) {
-                      return $_user->can($item);
-                  })
-                  ->count();
-            @endphp
-            @if ($_menu_condition)
-              <li class="nav-item dropdown @if ($_is_active) active @endif">
-                <a href="#" class="nav-link has-dropdown">
-                  <i class="{{ $_menu->icon }}"></i>
-                  <span>{{ __($_menu->menu_name) }}</span>
-                </a>
-                <ul class="dropdown-menu">
-                  @foreach ($_menu->childs as $_child_menu)
-                    @php
-                      $_sub_menu_condition = $_child_menu->permission === null || $_user->can($_child_menu->permission);
-                    @endphp
-                    @if ($_sub_menu_condition)
-                      <li @if (Request::is($_child_menu->is_active_if_url_includes)) class="active" @endif>
-                        <a class="nav-link" href="{{ $_child_menu->fix_url }}" @if ($_child_menu->is_blank) target="_blank" @endif>
-                          {{ __($_child_menu->menu_name) }}
-                        </a>
-                      </li>
-                    @endif
-                  @endforeach
-                </ul>
-              </li>
-            @endif
-          @endif
-        @endforeach
-      @endforeach
+            <li class="nav-item @if (Request::is('kategori*')) active @endif">
+        <a class="nav-link" href="{{ route('kategori.index') }}">
+          <i class="fas fa-tag"></i>
+          <span>Kategori</span>
+        </a>
+      </li>
+        <li class="nav-item @if (Request::is('penerbit*')) active @endif">
+        <a class="nav-link" href="{{ route('penerbit.index') }}">
+          <i class="fas fa-tag"></i>
+          <span>Penerbit</span>
+        </a>
+      </li>
+
+              <li class="nav-item @if (Request::is('pengarang*')) active @endif">
+        <a class="nav-link" href="{{ route('pengarang.index') }}">
+          <i class="fas fa-tag"></i>
+          <span>Pengarang</span>
+        </a>
+      </li>
+
+      {{-- <li class="nav-item dropdown @if (Request::is('pegawai/pdf') || Request::is('pegawai/print') || Request::is('pegawai/excel') || Request::is('pegawai/csv') || Request::is('pegawai/json')) active @endif">
+        <a href="#" class="nav-link has-dropdown">
+          <i class="fas fa-file-export"></i>
+          <span>Ekspor Pegawai</span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="nav-link" href="{{ route('pegawai.pdf') }}">Export PDF</a></li>
+          <li><a class="nav-link" href="{{ route('pegawai.print') }}">Export Print</a></li>
+          <li><a class="nav-link" href="{{ route('pegawai.excel') }}">Export Excel</a></li>
+          <li><a class="nav-link" href="{{ route('pegawai.csv') }}">Export CSV</a></li>
+          <li><a class="nav-link" href="{{ route('pegawai.json') }}">Export JSON</a></li>
+        </ul>
+      </li> --}}
+
+      <li class="nav-item @if (Request::is('setting')) active @endif">
+        <a class="nav-link" href="{{ route('setting.index') }}">
+          <i class="fas fa-cogs"></i>
+          <span>Pengaturan</span>
+        </a>
+      </li>
     </ul>
   </aside>
 </div>

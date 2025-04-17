@@ -24,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberAuthController;
+use App\Http\Controllers\KategoriController;
+use App\Models\Kategori;
+use App\Http\Controllers\PenerbitController;
+use App\Http\Controllers\PengarangController;
 
 # DASHBOARD
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -214,8 +218,49 @@ Route::prefix('member')->middleware(['auth'])->group(function () {
     Route::get('/json', [MemberController::class, 'exportJson'])->name('member.json');
     Route::post('/import', [MemberController::class, 'import'])->name('member.import');
 });
-
-Route::get('/register-member', [MemberAuthController::class, 'showRegisterForm'])->name('member.register');
-Route::post('/register-member', [MemberAuthController::class, 'register'])->name('member.register.store');
 Route::get('/setting', [\App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
 Route::post('/setting', [\App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
+
+Route::prefix('kategori')->middleware(['auth'])->group(function () {
+    Route::get('/', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::post('/store', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::get('/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::put('/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::delete('/delete/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+    // Ekspor
+    Route::get('/pdf', [KategoriController::class, 'exportPdf'])->name('kategori.pdf');
+    Route::get('/excel', [KategoriController::class, 'exportExcel'])->name('kategori.excel');
+    Route::get('/csv', [KategoriController::class, 'exportCsv'])->name('kategori.csv');
+    Route::get('/json', [KategoriController::class, 'exportJson'])->name('kategori.json');
+    Route::post('/import', [KategoriController::class, 'import'])->name('member.import');
+});
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/penerbit', [PenerbitController::class, 'index'])->name('penerbit.index');
+    Route::post('/penerbit', [PenerbitController::class, 'store'])->name('penerbit.store');
+    Route::get('/penerbit/{id}/edit', [PenerbitController::class, 'edit'])->name('penerbit.edit');
+    Route::put('/penerbit/{id}', [PenerbitController::class, 'update'])->name('penerbit.update');
+    Route::delete('/penerbit/{id}', [PenerbitController::class, 'destroy'])->name('penerbit.destroy');
+
+    // Exports
+    Route::get('/penerbit/pdf', [PenerbitController::class, 'exportPdf'])->name('penerbit.pdf');
+    Route::get('/penerbit/excel', [PenerbitController::class, 'exportExcel'])->name('penerbit.excel');
+    Route::get('/penerbit/csv', [PenerbitController::class, 'exportCsv'])->name('penerbit.csv');
+    Route::get('/penerbit/json', [PenerbitController::class, 'exportJson'])->name('penerbit.json');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pengarang', [PengarangController::class, 'index'])->name('pengarang.index');
+    Route::post('/pengarang', [PengarangController::class, 'store'])->name('pengarang.store');
+    Route::get('/pengarang/{id}/edit', [PengarangController::class, 'edit'])->name('pengarang.edit');
+    Route::put('/pengarang/{id}', [PengarangController::class, 'update'])->name('pengarang.update');
+    Route::delete('/pengarang/{id}', [PengarangController::class, 'destroy'])->name('pengarang.destroy');
+
+    // Exports
+    Route::get('/pengarang/pdf', [PengarangController::class, 'exportPdf'])->name('pengarang.pdf');
+    Route::get('/pengarang/excel', [PengarangController::class, 'exportExcel'])->name('pengarang.excel');
+    Route::get('/pengarang/csv', [PengarangController::class, 'exportCsv'])->name('pengarang.csv');
+    Route::get('/pengarang/json', [PengarangController::class, 'exportJson'])->name('pengarang.json');
+});
