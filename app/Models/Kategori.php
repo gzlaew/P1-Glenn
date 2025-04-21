@@ -11,4 +11,9 @@ class Kategori extends Model
     public $timestamps = true;
 
     protected $fillable = ['nama_kategori'];
+
+    public function bukus()
+    {
+        return $this->hasMany(Buku::class, 'id_kategori');
+    }
 }

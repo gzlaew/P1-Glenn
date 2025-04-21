@@ -139,20 +139,23 @@
         </div>
 
         <div class="col-md-6">
-          @include('stisla.includes.forms.inputs.input-password', [
+        @include('stisla.includes.forms.inputs.input-password', [
             'id' => 'password',
             'label' => 'Password',
-          ])
-          @if(isset($user))
-            <small class="text-muted">Kosongkan jika tidak ingin mengganti password</small>
-          @endif
+            'required' => !isset($user) // hanya required jika sedang create
+        ])
+        @if(isset($user))
+        <small class="text-muted">Kosongkan jika tidak ingin mengganti password</small>
+        @endif
+
         </div>
 
         <div class="col-md-6">
-          @include('stisla.includes.forms.inputs.input-password', [
+        @include('stisla.includes.forms.inputs.input-password', [
             'id' => 'password_confirmation',
             'label' => 'Konfirmasi Password',
-          ])
+            'required' => !isset($user)
+        ])
         </div>
       </div>
 

@@ -28,6 +28,9 @@ use App\Http\Controllers\KategoriController;
 use App\Models\Kategori;
 use App\Http\Controllers\PenerbitController;
 use App\Http\Controllers\PengarangController;
+use App\Http\Controllers\SaldoTopupController;
+use App\Http\Controllers\BukuController;
+use App\Http\Controllers\SaldoHistoryController;
 
 # DASHBOARD
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -262,4 +265,34 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengarang/excel', [PengarangController::class, 'exportExcel'])->name('pengarang.excel');
     Route::get('/pengarang/csv', [PengarangController::class, 'exportCsv'])->name('pengarang.csv');
     Route::get('/pengarang/json', [PengarangController::class, 'exportJson'])->name('pengarang.json');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/topup', [SaldoTopupController::class, 'index'])->name('topup.index');
+    Route::get('/topup/create', [SaldoTopupController::class, 'create'])->name('topup.create');
+    Route::post('/topup/store', [SaldoTopupController::class, 'store'])->name('topup.store');
+
+    Route::post('/topup/{id}/approve', [SaldoTopupController::class, 'approve'])->name('topup.approve');
+    Route::post('/topup/{id}/reject', [SaldoTopupController::class, 'reject'])->name('topup.reject');
+
+    Route::get('/topup/pdf', [SaldoTopupController::class, 'exportPdf'])->name('topup.pdf');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
+    Route::post('/buku/store', [BukuController::class, 'store'])->name('buku.store');
+    Route::put('/buku/update/{id}', [BukuController::class, 'update'])->name('buku.update');
+    Route::delete('/buku/delete/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
+
+    // Export PDF
+    Route::get('/buku/pdf', [BukuController::class, 'exportPdf'])->name('buku.pdf');
+
+    // Tampilan khusus untuk member (show semua buku dalam bentuk kartu)
+    Route::get('/buku/show', [BukuController::class, 'show'])->name('buku.show');
+    Route::get('/buku/export/pdf', [BukuController::class, 'exportPdf'])->name('buku.exportPdf');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/history', [SaldoHistoryController::class, 'index'])->name('history.index');
+    Route::get('/history/export/pdf', [SaldoHistoryController::class, 'exportPdf'])->name('history.exportPdf');
 });

@@ -76,10 +76,13 @@
         <div class="card">
           <div class="card-header d-flex justify-content-between align-items-center">
             <h4><i class="fas fa-wallet"></i> Informasi Akun</h4>
-            <a href="#" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Isi Saldo</a>
+            <a href="{{ route('topup.create') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Isi Saldo</a>
           </div>
           <div class="card-body">
             <p><strong>Saldo:</strong> Rp {{ number_format($user->saldo ?? 0) }}</p>
+            <a href="{{ route('history.index') }}" class="btn btn-info mb-3">
+            <i class="fas fa-history"></i> Riwayat Saldo
+            </a>
             <p><strong>Tanggal Bergabung:</strong> {{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</p>
           </div>
         </div>

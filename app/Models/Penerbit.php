@@ -10,4 +10,9 @@ class Penerbit extends Model
     protected $primaryKey = 'id_penerbit';
     protected $fillable = ['nama_penerbit'];
     public $timestamps = true;
+
+    public function bukus()
+    {
+        return $this->hasMany(Buku::class, 'id_kategori');
+    }
 }
